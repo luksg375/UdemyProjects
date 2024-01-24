@@ -44,7 +44,6 @@ public class Program {
 
             }
 
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter()))
 
         }
         catch (IOException e) {
