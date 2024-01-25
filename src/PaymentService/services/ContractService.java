@@ -7,20 +7,20 @@ import java.time.LocalDate;
 
 public class ContractService {
 
-    public void processContract(Contract contract, Integer months) {
+    private OnlinePaymentService onlinePaymentService;
 
-        for (int i = 1; months <= i; i++) {
+    public ContractService(OnlinePaymentService onlinePaymentService) {
+        this.onlinePaymentService = onlinePaymentService;
+    }
+
+    public void processContract(Contract contract, Integer months) {
+        double dividedValue = contract.getTotalValue() / months;
+        for (int i = 1; i <= months; i++) {
             LocalDate installmentDate = contract.getDate().plusMonths(i);
-            double dividedValue = contract.getTotalValue() / months;
-            OnlinePaymentService paymentService = new PaypalService();
-            double interestResult =  paymentService.interest(dividedValue, i);
-            double calculatedValue = paymentService.paymentFee(dividedValue + interestResult);
+            double interestResult = onlinePaymentService.interest(dividedValue, i);
+            double calculatedValue = onlinePaymentService.paymentFee(dividedValue + interestResult);
             double quota = dividedValue + interestResult + calculatedValue;
             contract.getInstallments().add(new Installment(installmentDate, quota));
-
-            System.out.println(installmentDate);
-            System.out.println(calculatedValue);
-            System.out.println(quota);
 
 
         }

@@ -3,6 +3,7 @@ package PaymentService;
 import PaymentService.entities.Contract;
 import PaymentService.entities.Installment;
 import PaymentService.services.ContractService;
+import PaymentService.services.PaypalService;
 
 import javax.swing.text.DateFormatter;
 import java.time.LocalDate;
@@ -27,11 +28,14 @@ public class program {
         LocalDate date = LocalDate.parse(sc.nextLine(), fmt);
         System.out.print("Valor do contrato: ");
         double totalValue = sc.nextDouble();
+
+        Contract contract = new Contract(number, date, totalValue);
+
         System.out.print("Entre com o número de parcelas: ");
         int months = sc.nextInt();
 
-        Contract contract = new Contract(number, date, totalValue);
-        ContractService contractService = new ContractService();
+        ContractService contractService = new ContractService(new PaypalService());
+
         contractService.processContract(contract, months);
 
         System.out.println("Parcelas: ");
